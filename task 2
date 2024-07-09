@@ -1,0 +1,116 @@
+ /*build a robust online marketplace similar to amazon or eBay,allowing users to buy and sell products or services.implement advanced features such as seller storefronts, produc listings with images and descriptions, reviews and ratings, advanced search and filtering options . give me a python code*/
+
+
+from typing import List
+
+# Define classes for products, sellers, reviews
+
+class Product:
+    def __init__(self, id: int, name: str, description: str, price: float, seller_id: int, image_url: str):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.price = price
+        self.seller_id = seller_id
+        self.image_url = image_url
+        self.reviews = []
+
+    def add_review(self, review):
+        self.reviews.append(review)
+
+class Seller:
+    def __init__(self, id: int, name: str):
+        self.id = id
+        self.name = name
+        self.products = []
+
+    def add_product(self, product):
+        self.products.append(product)
+
+class Review:
+    def __init__(self, id: int, product_id: int, rating: int, comment: str):
+        self.id = id
+        self.product_id = product_id
+        self.rating = rating
+        self.comment = comment
+
+
+# Example data initialization (you would typically use a database)
+
+# Sellers
+sellers = [
+    Seller(1, "Seller A"),
+    Seller(2, "Seller B"),
+    Seller(3, "Seller C")
+]
+
+# Products
+products = [
+    Product(1, "Product 1", "Description of Product 1", 99.99, 1, "https://example.com/product1.jpg"),
+    Product(2, "Product 2", "Description of Product 2", 149.99, 2, "https://example.com/product2.jpg"),
+    Product(3, "Product 3", "Description of Product 3", 199.99, 1, "https://example.com/product3.jpg"),
+    Product(4, "Product 4", "Description of Product 4", 79.99, 3, "https://example.com/product4.jpg"),
+]
+
+# Reviews
+reviews = [
+    Review(1, 1, 5, "Great product, highly recommended!"),
+    Review(2, 1, 4, "Good product, fast delivery."),
+    Review(3, 2, 3, "Average product, could be better."),
+    Review(4, 3, 5, "Excellent product quality."),
+    Review(5, 4, 2, "Not satisfied with the product."),
+]
+
+# Adding reviews to products
+for review in reviews:
+    for product in products:
+        if review.product_id == product.id:
+            product.add_review(review)
+            break
+
+# Function to search products by name or description
+def search_products(keyword: str) -> List[Product]:
+    result = []
+    for product in products:
+        if keyword.lower() in product.name.lower() or keyword.lower() in product.description.lower():
+            result.append(product)
+    return result
+
+# Function to filter products by price range
+def filter_products(min_price: float, max_price: float) -> List[Product]:
+    result = []
+    for product in products:
+        if min_price <= product.price <= max_price:
+            result.append(product)
+    return result
+
+
+# Example usage:
+
+# Search products by keyword
+print("Search results for 'Product 1':")
+search_results = search_products("Product 1")
+for product in search_results:
+    print(f"Name: {product.name}, Price: ${product.price}, Seller: {sellers[product.seller_id - 1].name}")
+
+print("\n")
+
+# Filter products by price range
+print("Products between $100 and $200:")
+filtered_products = filter_products(100.0, 200.0)
+for product in filtered_products:
+    print(f"Name: {product.name}, Price: ${product.price}, Seller: {sellers[product.seller_id - 1].name}")
+
+print("\n")
+
+# Display seller's products
+print("Seller A's products:")
+for product in sellers[0].products:
+    print(f"Name: {product.name}, Price: ${product.price}")
+
+print("\n")
+
+# Display product reviews
+print("Reviews for Product 1:")
+for review in products[0].reviews:
+    print(f"Rating: {review.rating}, Comment: {review.comment}")
